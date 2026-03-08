@@ -3,16 +3,18 @@ import 'package:client/features/auth/repositories/auth_remote_repository.dart';
 import 'package:client/features/auth/view/pages/signup_page.dart';
 import 'package:client/features/auth/view/widgets/auth_gradiant_button.dart';
 import 'package:client/features/auth/view/widgets/custom_field.dart';
+import 'package:client/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
@@ -51,15 +53,13 @@ class _LoginPageState extends State<LoginPage> {
               AuthGradientButton(
                 buttonText: "Sign In",
                 onTap: () async {
-                  try {
-                    final res = await AuthRemoteRepository().login(
-                      email: emailController.text,
-                      password: passwordController.text,
-                    );
-                    print("Login pressed!");
-                    print(res);
-                  } catch (e) {
-                    print("Login error: $e");
+                  if (formKey.currentState!.validate()) {
+                    await ref
+                        .read(authViewmodelProvider.notifier)
+                        .login(
+                          email: emailController.text,
+                          password: passwordController.text,
+                        );
                   }
                 },
               ),
