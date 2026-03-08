@@ -1,4 +1,5 @@
 import 'package:client/core/team/app_pallete.dart';
+import 'package:client/core/widgets/utils.dart';
 import 'package:client/features/auth/model/user_model.dart';
 import 'package:client/features/auth/repositories/auth_remote_repository.dart';
 import 'package:client/features/auth/view/pages/signup_page.dart';
@@ -34,13 +35,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
     ref.listen<AsyncValue<UserModel>?>(authViewmodelProvider, (previous, next) {
       if (next?.hasError == true) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(next!.error.toString())));
+        showSnackBar(context, next!.error.toString());
       } else if (next?.hasValue == true) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text("Login successful!")));
+        showSnackBar(context, "Login successful!");
       }
     });
 

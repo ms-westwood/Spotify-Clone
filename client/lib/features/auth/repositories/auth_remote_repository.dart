@@ -1,7 +1,15 @@
 import 'dart:convert';
 import 'package:client/core/constants/server_constant.dart';
 import 'package:client/features/auth/model/user_model.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:http/http.dart' as http;
+
+part 'auth_remote_repository.g.dart';
+
+@riverpod
+AuthRemoteRepository authRemoteRepository(Ref ref) {
+  return AuthRemoteRepository();
+}
 
 class AuthRemoteRepository {
   Future<UserModel> signup({

@@ -1,4 +1,5 @@
 import 'package:client/core/team/app_pallete.dart';
+import 'package:client/core/widgets/utils.dart';
 import 'package:client/features/auth/model/user_model.dart';
 import 'package:client/features/auth/view/pages/login_page.dart';
 import 'package:client/features/auth/view/widgets/auth_gradiant_button.dart';
@@ -35,14 +36,9 @@ class _SignupPageState extends ConsumerState<SignupPage> {
 
     ref.listen<AsyncValue<UserModel>?>(authViewmodelProvider, (previous, next) {
       if (next?.hasError == true) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(next!.error.toString())));
+        showSnackBar(context, next!.error.toString());
       } else if (next?.hasValue == true) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text("Signup successful!")));
-
+        showSnackBar(context, "Signup successful!");
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const LoginPage()),
