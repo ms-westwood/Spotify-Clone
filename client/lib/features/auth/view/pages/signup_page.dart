@@ -3,17 +3,19 @@ import 'package:client/features/auth/repositories/auth_remote_repository.dart';
 import 'package:client/features/auth/view/pages/login_page.dart';
 import 'package:client/features/auth/view/widgets/auth_gradiant_button.dart';
 import 'package:client/features/auth/view/widgets/custom_field.dart';
+import 'package:client/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:client/features/auth/repositories/auth_remote_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SignupPage extends StatefulWidget {
+class SignupPage extends ConsumerStatefulWidget {
   const SignupPage({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  ConsumerState<SignupPage> createState() => _SignupPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _SignupPageState extends ConsumerState<SignupPage> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -29,6 +31,9 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
+    final val = ref.watch(authViewmodelProvider);
+    print("Current auth state: $val");
+
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
@@ -56,15 +61,14 @@ class _SignupPageState extends State<SignupPage> {
               AuthGradientButton(
                 buttonText: "Sign Up",
                 onTap: () async {
-                  try {
-                    final res = await AuthRemoteRepository().signup(
-                      name: nameController.text,
-                      email: emailController.text,
-                      password: passwordController.text,
-                    );
-                    print(res);
-                  } catch (e) {
-                    print("Signup error: $e");
+                  if (formKey.currentState!.validate()) {
+                    await ref
+                        .read(authViewmodelProvider.notifier)
+                        .signup(
+                          name: nameController.text,
+                          email: emailController.text,
+                          password: passwordController.text,
+                        );
                   }
                 },
               ),
