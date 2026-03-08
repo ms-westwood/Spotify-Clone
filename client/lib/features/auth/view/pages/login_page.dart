@@ -52,11 +52,12 @@ class _LoginPageState extends State<LoginPage> {
                 buttonText: "Sign In",
                 onTap: () async {
                   try {
-                    await AuthRemoteRepository().login(
+                    final res = await AuthRemoteRepository().login(
                       email: emailController.text,
                       password: passwordController.text,
                     );
                     print("Login pressed!");
+                    print(res);
                   } catch (e) {
                     print("Login error: $e");
                   }

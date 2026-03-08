@@ -1,14 +1,16 @@
 import 'dart:convert';
+import 'package:client/core/constants/server_constant.dart';
+import 'package:client/features/auth/model/user_model.dart';
 import 'package:http/http.dart' as http;
 
 class AuthRemoteRepository {
-  Future<Map<String, dynamic>> signup({
+  Future<UserModel> signup({
     required String name,
     required String email,
     required String password,
   }) async {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/auth/signup'),
+      Uri.parse('${ServerConstant.serverURL}/auth/signup'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'name': name, 'email': email, 'password': password}),
     );
@@ -18,15 +20,18 @@ class AuthRemoteRepository {
     if (response.statusCode == 201) {
       print("Signup success");
       print(user);
-      return user;
+      return UserModel.fromMap(user);
     } else {
       throw Exception(user['detail']);
     }
   }
 
-  Future<void> login({required String email, required String password}) async {
+  Future<UserModel> login({
+    required String email,
+    required String password,
+  }) async {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/auth/login'),
+      Uri.parse('${ServerConstant.serverURL}/auth/login'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'email': email, 'password': password}),
     );
@@ -36,6 +41,7 @@ class AuthRemoteRepository {
     if (response.statusCode == 200) {
       print("Login success");
       print(data);
+      return UserModel.fromMap(data);
     } else {
       throw Exception(data['detail']);
     }
