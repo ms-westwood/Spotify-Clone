@@ -42,6 +42,11 @@ class _SignupPageState extends ConsumerState<SignupPage> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text("Signup successful!")));
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+        );
       }
     });
 
