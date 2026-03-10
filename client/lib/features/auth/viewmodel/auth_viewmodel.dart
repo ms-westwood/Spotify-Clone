@@ -1,16 +1,21 @@
 import 'package:client/features/auth/repositories/auth_remote_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../model/user_model.dart';
+import 'package:client/features/auth/model/user_model.dart';
+import 'package:client/features/auth/repositories/auth_local_repository.dart';
 
 part 'auth_viewmodel.g.dart';
 
 @riverpod
 class AuthViewmodel extends _$AuthViewmodel {
   late AuthRemoteRepository _authRemoteRepository;
+  //late AuthLocalocalRepository _authLocalRepository;
+  AsyncValue<AuthLocalocalRepository>? _authLocalRepository;
 
   @override
   AsyncValue<UserModel>? build() {
     _authRemoteRepository = ref.watch(authRemoteRepositoryProvider);
+    _authLocalRepository = ref.watch(authLocalRepositoryProvider);
+
     return null;
   }
 
@@ -37,14 +42,19 @@ class AuthViewmodel extends _$AuthViewmodel {
   Future<void> login({required String email, required String password}) async {
     try {
       state = const AsyncValue.loading();
-      final res = await _authRemoteRepository.login(
+
+      // await the provider directly, no intermediate field
+      final localRepo = await ref.watch(authLocalRepositoryProvider.future);
+
+      final user = await _authRemoteRepository.login(
         email: email,
         password: password,
       );
-      print(res);
-      state = AsyncValue.data(res);
+
+      localRepo.setToken(user.token);
+
+      state = AsyncValue.data(user);
     } catch (e, st) {
-      print("Login error: $e");
       state = AsyncValue.error(e, st);
     }
   }

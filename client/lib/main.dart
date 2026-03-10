@@ -2,9 +2,13 @@ import 'package:client/core/team/theme.dart';
 import 'package:client/features/auth/view/pages/signup_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'features/auth/viewmodel/auth_viewmodel.dart';
 
-void main() {
-  runApp(ProviderScope(child: const MyApp()));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final container = ProviderContainer();
+
+  runApp(UncontrolledProviderScope(container: container, child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

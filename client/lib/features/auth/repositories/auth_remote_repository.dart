@@ -49,7 +49,8 @@ class AuthRemoteRepository {
     if (response.statusCode == 200) {
       print("Login success");
       print(data);
-      return UserModel.fromMap(data);
+      final user = UserModel.fromMap(data['user']);
+      return user.copyWith(token: data['token']);
     } else {
       throw Exception(data['detail']);
     }
