@@ -1,4 +1,5 @@
-from fastapi import FastAPI, HTTPException, Depends
+
+from fastapi import FastAPI, HTTPException, Depends, Header
 import bcrypt
 import uuid
 from models.user import User
@@ -8,6 +9,7 @@ from fastapi import APIRouter
 from database import get_db
 from sqlalchemy.orm import Session
 import jwt
+from middleware.auth_middleware import auth_middleware
 
 router = APIRouter()
 
@@ -41,3 +43,12 @@ def login_user(user: UserLogin, db: Session=Depends(get_db)):
     token = jwt.encode({'id': user_db.id}, 'password_key')
 
     return {"token": token, 'user': user_db}
+
+@router.get('/')
+def current_user_data(db: Session = Depends(get_db), user_dict = Depends(auth_middleware)):
+    user = db.query(User).filter(User.id == user_dict['uid']).first()
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return user

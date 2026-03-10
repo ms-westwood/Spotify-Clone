@@ -55,4 +55,22 @@ class AuthRemoteRepository {
       throw Exception(data['detail']);
     }
   }
+
+  Future<UserModel> getCurrentUserData({required String token}) async {
+    final response = await http.get(
+      Uri.parse('${ServerConstant.serverURL}/auth/'),
+      headers: {'Content-Type': 'application/json', 'x-auth-token': token},
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      print("Login success");
+      print(data);
+      final user = UserModel.fromMap(data);
+      return user.copyWith(token: token);
+    } else {
+      throw Exception(data['detail']);
+    }
+  }
 }

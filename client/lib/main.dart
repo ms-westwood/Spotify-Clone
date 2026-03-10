@@ -7,7 +7,10 @@ import 'features/auth/viewmodel/auth_viewmodel.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final container = ProviderContainer();
-
+  final userModel = await container
+      .read(authViewmodelProvider.notifier)
+      .getData();
+  print(userModel);
   runApp(UncontrolledProviderScope(container: container, child: const MyApp()));
 }
 
