@@ -32,7 +32,9 @@ class _SignupPageState extends ConsumerState<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(authViewmodelProvider)?.isLoading == true;
+    final isLoading = ref.watch(
+      authViewmodelProvider.select((val) => val?.isLoading == true),
+    );
 
     ref.listen<AsyncValue<UserModel>?>(authViewmodelProvider, (previous, next) {
       if (next?.hasError == true) {

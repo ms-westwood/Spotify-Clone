@@ -6,6 +6,7 @@ import 'package:client/features/auth/view/pages/signup_page.dart';
 import 'package:client/features/auth/view/widgets/auth_gradiant_button.dart';
 import 'package:client/features/auth/view/widgets/custom_field.dart';
 import 'package:client/features/auth/viewmodel/auth_viewmodel.dart';
+import 'package:client/features/home/view/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:client/core/widgets/loader.dart';
@@ -31,12 +32,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(authViewmodelProvider)?.isLoading == true;
+    final isLoading = ref.watch(
+      authViewmodelProvider.select((val) => val?.isLoading == true),
+    );
 
     ref.listen<AsyncValue<UserModel>?>(authViewmodelProvider, (previous, next) {
       if (next?.hasError == true) {
         showSnackBar(context, next!.error.toString());
-      } else if (next?.hasValue == true) {
+      } else if (next?.hasValue == true) {/* uncomment richelle
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+          (route) => false,
+        );*/
         showSnackBar(context, "Login successful!");
       }
     });
@@ -78,6 +86,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 email: emailController.text,
                                 password: passwordController.text,
                               );
+                        } else {
+                          showSnackBar(context, "Please fill all fields");
                         }
                       },
                     ),

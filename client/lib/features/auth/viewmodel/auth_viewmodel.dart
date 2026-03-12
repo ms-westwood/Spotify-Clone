@@ -1,3 +1,4 @@
+import 'package:client/core/providers/current_user_notifier.dart';
 import 'package:client/features/auth/repositories/auth_remote_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:client/features/auth/model/user_model.dart';
@@ -8,13 +9,14 @@ part 'auth_viewmodel.g.dart';
 @riverpod
 class AuthViewmodel extends _$AuthViewmodel {
   late AuthRemoteRepository _authRemoteRepository;
-  //late AuthLocalocalRepository _authLocalRepository;
   AsyncValue<AuthLocalocalRepository>? _authLocalRepository;
+  late CurrentUserNotifier _currentUserNotifier;
 
   @override
   AsyncValue<UserModel>? build() {
     _authRemoteRepository = ref.watch(authRemoteRepositoryProvider);
     _authLocalRepository = ref.watch(authLocalRepositoryProvider);
+    _currentUserNotifier = ref.watch(currentUserProvider.notifier);
 
     return null;
   }
@@ -50,9 +52,9 @@ class AuthViewmodel extends _$AuthViewmodel {
         email: email,
         password: password,
       );
-
+      //success
       localRepo.setToken(user.token);
-
+      _currentUserNotifier.addUser(user);
       state = AsyncValue.data(user);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -69,11 +71,11 @@ class AuthViewmodel extends _$AuthViewmodel {
       if (token == null) {
         return null;
       }
-
-      final res = await _authRemoteRepository.getCurrentUserData(token: token);
-
-      state = AsyncValue.data(res);
-      return res;
+      // Success
+      final user = await _authRemoteRepository.getCurrentUserData(token: token);
+      _currentUserNotifier.addUser(user);
+      state = AsyncValue.data(user);
+      return user;
     } catch (e, st) {
       state = AsyncValue.error(e, st);
       return null;
