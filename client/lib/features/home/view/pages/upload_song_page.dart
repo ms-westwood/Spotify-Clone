@@ -1,4 +1,6 @@
+import 'package:client/core/widgets/custom_field.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:client/core/team/app_pallete.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,39 +13,83 @@ class UploadSongPage extends ConsumerStatefulWidget {
 }
 
 class _UploadSongPageState extends ConsumerState<UploadSongPage> {
+  final songNameController = TextEditingController();
+  final artistController = TextEditingController();
+  Color selectedColor = Pallete.cardColor;
+
+  @override
+  void dispose() {
+    super.dispose();
+    songNameController.dispose();
+    artistController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Upload Song"), centerTitle: true),
+      appBar: AppBar(
+        title: const Text("Upload Song"),
+        centerTitle: true,
+        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.check))],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            DottedBorder(
-              options: RectDottedBorderOptions(
-                dashPattern: [10, 4],
-                strokeWidth: 2,
-                color: Pallete.borderColor,
-              ),
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(Icons.file_open, size: 40),
-                    SizedBox(height: 15),
-                    Text(
-                      "Select the thumbnail for your song",
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Pallete.borderColor,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 20),
+              DottedBorder(
+                options: RoundedRectDottedBorderOptions(
+                  dashPattern: [20, 8],
+                  strokeWidth: 2,
+                  color: Pallete.borderColor,
+                  radius: const Radius.circular(10),
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Icon(Icons.file_open, size: 40),
+                      SizedBox(height: 15),
+                      Text(
+                        "Select the thumbnail for your song",
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Pallete.borderColor,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 40),
+              CustomField(
+                hintText: 'Pick Song',
+                controller: null,
+                readOnly: true,
+                onTap: () {},
+              ),
+              const SizedBox(height: 20),
+              CustomField(hintText: 'Artist', controller: artistController),
+              const SizedBox(height: 20),
+              CustomField(
+                hintText: 'Song Name',
+                controller: songNameController,
+              ),
+              const SizedBox(height: 20),
+              ColorPicker(
+                pickersEnabled: const {ColorPickerType.wheel: true},
+                color: selectedColor,
+                onColorChanged: (color) {
+                  setState(() {
+                    selectedColor = color;
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );

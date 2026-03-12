@@ -4,7 +4,7 @@ import 'package:client/features/auth/model/user_model.dart';
 import 'package:client/features/auth/repositories/auth_remote_repository.dart';
 import 'package:client/features/auth/view/pages/signup_page.dart';
 import 'package:client/features/auth/view/widgets/auth_gradiant_button.dart';
-import 'package:client/features/auth/view/widgets/custom_field.dart';
+import 'package:client/core/widgets/custom_field.dart';
 import 'package:client/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:client/features/home/view/pages/home_page.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +39,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     ref.listen<AsyncValue<UserModel>?>(authViewmodelProvider, (previous, next) {
       if (next?.hasError == true) {
         showSnackBar(context, next!.error.toString());
-      } else if (next?.hasValue == true) {/* uncomment richelle
+      } else if (next?.hasValue == true) {
+        /* uncomment richelle
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const HomePage()),
