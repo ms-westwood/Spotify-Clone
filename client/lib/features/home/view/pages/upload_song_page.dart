@@ -1,9 +1,11 @@
 import 'package:client/core/widgets/custom_field.dart';
+import 'package:client/core/widgets/utils.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:client/core/team/app_pallete.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:io';
 
 class UploadSongPage extends ConsumerStatefulWidget {
   const UploadSongPage({super.key});
@@ -16,6 +18,20 @@ class _UploadSongPageState extends ConsumerState<UploadSongPage> {
   final songNameController = TextEditingController();
   final artistController = TextEditingController();
   Color selectedColor = Pallete.cardColor;
+  File? selectedImage;
+  File? selectedAudio;
+
+  void selectImage() async {
+    final pickedImage = await pickImage();
+    if (pickedImage != null) {
+      setState(() {
+        selectedImage = pickedImage;
+      });
+      print(pickedImage.path);
+    }
+  }
+
+  void selectAudio() {}
 
   @override
   void dispose() {
@@ -35,61 +51,69 @@ class _UploadSongPageState extends ConsumerState<UploadSongPage> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 20),
-              DottedBorder(
-                options: RoundedRectDottedBorderOptions(
-                  dashPattern: [20, 8],
-                  strokeWidth: 2,
-                  color: Pallete.borderColor,
-                  radius: const Radius.circular(10),
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Icon(Icons.file_open, size: 40),
-                      SizedBox(height: 15),
-                      Text(
-                        "Select the thumbnail for your song",
-                        style: TextStyle(
-                          fontSize: 15,
+          child: selectedImage != null
+              ? Image.file(selectedImage!)
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 20),
+                    GestureDetector(
+                      onTap: selectImage,
+                      child: DottedBorder(
+                        options: RoundedRectDottedBorderOptions(
+                          dashPattern: [20, 8],
+                          strokeWidth: 2,
                           color: Pallete.borderColor,
+                          radius: const Radius.circular(10),
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: const [
+                              Icon(Icons.file_open, size: 40),
+                              SizedBox(height: 15),
+                              Text(
+                                "Select the thumbnail for your song",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Pallete.borderColor,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 40),
+                    CustomField(
+                      hintText: 'Pick Song',
+                      controller: null,
+                      readOnly: true,
+                      onTap: () {},
+                    ),
+                    const SizedBox(height: 20),
+                    CustomField(
+                      hintText: 'Artist',
+                      controller: artistController,
+                    ),
+                    const SizedBox(height: 20),
+                    CustomField(
+                      hintText: 'Song Name',
+                      controller: songNameController,
+                    ),
+                    const SizedBox(height: 20),
+                    ColorPicker(
+                      pickersEnabled: const {ColorPickerType.wheel: true},
+                      color: selectedColor,
+                      onColorChanged: (color) {
+                        setState(() {
+                          selectedColor = color;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 40),
-              CustomField(
-                hintText: 'Pick Song',
-                controller: null,
-                readOnly: true,
-                onTap: () {},
-              ),
-              const SizedBox(height: 20),
-              CustomField(hintText: 'Artist', controller: artistController),
-              const SizedBox(height: 20),
-              CustomField(
-                hintText: 'Song Name',
-                controller: songNameController,
-              ),
-              const SizedBox(height: 20),
-              ColorPicker(
-                pickersEnabled: const {ColorPickerType.wheel: true},
-                color: selectedColor,
-                onColorChanged: (color) {
-                  setState(() {
-                    selectedColor = color;
-                  });
-                },
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
         ),
       ),
     );

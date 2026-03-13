@@ -53,6 +53,7 @@ class AuthViewmodel extends _$AuthViewmodel {
         password: password,
       );
       //success
+
       localRepo.setToken(user.token);
       _currentUserNotifier.addUser(user);
       state = AsyncValue.data(user);
