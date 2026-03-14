@@ -17,16 +17,20 @@ class UploadSongPage extends ConsumerStatefulWidget {
 class _UploadSongPageState extends ConsumerState<UploadSongPage> {
   final songNameController = TextEditingController();
   final artistController = TextEditingController();
+
   Color selectedColor = Pallete.cardColor;
+
   File? selectedImage;
   File? selectedAudio;
 
   void selectImage() async {
     final pickedImage = await pickImage();
+
     if (pickedImage != null) {
       setState(() {
         selectedImage = pickedImage;
       });
+
       print(pickedImage.path);
     }
   }
@@ -35,9 +39,9 @@ class _UploadSongPageState extends ConsumerState<UploadSongPage> {
 
   @override
   void dispose() {
-    super.dispose();
     songNameController.dispose();
     artistController.dispose();
+    super.dispose();
   }
 
   @override
@@ -51,15 +55,26 @@ class _UploadSongPageState extends ConsumerState<UploadSongPage> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
-          child: selectedImage != null
-              ? Image.file(selectedImage!)
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(height: 20),
-                    GestureDetector(
-                      onTap: selectImage,
-                      child: DottedBorder(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 20),
+
+              /// IMAGE PICKER
+              GestureDetector(
+                onTap: selectImage,
+                child: selectedImage != null
+                    ? SizedBox(
+                        height: 200,
+                        width: double.infinity,
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          child: Image.file(selectedImage!, fit: BoxFit.cover),
+                        ),
+                      )
+                    : DottedBorder(
                         options: RoundedRectDottedBorderOptions(
                           dashPattern: [20, 8],
                           strokeWidth: 2,
@@ -83,37 +98,47 @@ class _UploadSongPageState extends ConsumerState<UploadSongPage> {
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 40),
-                    CustomField(
-                      hintText: 'Pick Song',
-                      controller: null,
-                      readOnly: true,
-                      onTap: () {},
-                    ),
-                    const SizedBox(height: 20),
-                    CustomField(
-                      hintText: 'Artist',
-                      controller: artistController,
-                    ),
-                    const SizedBox(height: 20),
-                    CustomField(
-                      hintText: 'Song Name',
-                      controller: songNameController,
-                    ),
-                    const SizedBox(height: 20),
-                    ColorPicker(
-                      pickersEnabled: const {ColorPickerType.wheel: true},
-                      color: selectedColor,
-                      onColorChanged: (color) {
-                        setState(() {
-                          selectedColor = color;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                  ],
-                ),
+              ),
+
+              const SizedBox(height: 40),
+
+              /// SONG PICKER
+              CustomField(
+                hintText: 'Pick Song',
+                controller: null,
+                readOnly: true,
+                onTap: () {},
+              ),
+
+              const SizedBox(height: 20),
+
+              /// ARTIST FIELD
+              CustomField(hintText: 'Artist', controller: artistController),
+
+              const SizedBox(height: 20),
+
+              /// SONG NAME FIELD
+              CustomField(
+                hintText: 'Song Name',
+                controller: songNameController,
+              ),
+
+              const SizedBox(height: 20),
+
+              /// COLOR PICKER
+              ColorPicker(
+                pickersEnabled: const {ColorPickerType.wheel: true},
+                color: selectedColor,
+                onColorChanged: (color) {
+                  setState(() {
+                    selectedColor = color;
+                  });
+                },
+              ),
+
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );

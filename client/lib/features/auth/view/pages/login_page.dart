@@ -7,6 +7,7 @@ import 'package:client/features/auth/view/widgets/auth_gradiant_button.dart';
 import 'package:client/core/widgets/custom_field.dart';
 import 'package:client/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:client/features/home/view/pages/home_page.dart';
+import 'package:client/features/home/view/pages/upload_song_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:client/core/widgets/loader.dart';
@@ -40,12 +41,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       if (next?.hasError == true) {
         showSnackBar(context, next!.error.toString());
       } else if (next?.hasValue == true) {
-        /* uncomment richelle
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(
+            builder: (context) => const UploadSongPage(),
+          ), //HomePage()), richelle change back
           (route) => false,
-        );*/
+        );
         showSnackBar(context, "Login successful!");
       }
     });

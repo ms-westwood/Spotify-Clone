@@ -15,13 +15,13 @@ final authLocalRepositoryProvider = AuthLocalRepositoryProvider._();
 final class AuthLocalRepositoryProvider
     extends
         $FunctionalProvider<
-          AsyncValue<AuthLocalocalRepository>,
-          AuthLocalocalRepository,
-          FutureOr<AuthLocalocalRepository>
+          AsyncValue<AuthLocalRepository>,
+          AuthLocalRepository,
+          FutureOr<AuthLocalRepository>
         >
     with
-        $FutureModifier<AuthLocalocalRepository>,
-        $FutureProvider<AuthLocalocalRepository> {
+        $FutureModifier<AuthLocalRepository>,
+        $FutureProvider<AuthLocalRepository> {
   AuthLocalRepositoryProvider._()
     : super(
         from: null,
@@ -38,15 +38,15 @@ final class AuthLocalRepositoryProvider
 
   @$internal
   @override
-  $FutureProviderElement<AuthLocalocalRepository> $createElement(
+  $FutureProviderElement<AuthLocalRepository> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<AuthLocalocalRepository> create(Ref ref) {
+  FutureOr<AuthLocalRepository> create(Ref ref) {
     return authLocalRepository(ref);
   }
 }
 
 String _$authLocalRepositoryHash() =>
-    r'2492b666316ef1dec400547fb38a2c1fa0698d39';
+    r'698586ce62585d300a4b8ae7ef6f685fedbb5a7b';

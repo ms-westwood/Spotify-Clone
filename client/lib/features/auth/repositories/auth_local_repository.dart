@@ -3,13 +3,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'auth_local_repository.g.dart';
 
 @riverpod
-Future<AuthLocalocalRepository> authLocalRepository(Ref ref) async {
-  final repo = AuthLocalocalRepository();
+Future<AuthLocalRepository> authLocalRepository(Ref ref) async {
+  final repo = AuthLocalRepository();
   await repo.init(); // init SharedPreferences automatically
   return repo;
 }
 
-class AuthLocalocalRepository {
+class AuthLocalRepository {
   late SharedPreferences _sharedPreferences;
 
   Future<void> init() async {

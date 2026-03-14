@@ -9,7 +9,7 @@ part 'auth_viewmodel.g.dart';
 @riverpod
 class AuthViewmodel extends _$AuthViewmodel {
   late AuthRemoteRepository _authRemoteRepository;
-  AsyncValue<AuthLocalocalRepository>? _authLocalRepository;
+  AsyncValue<AuthLocalRepository>? _authLocalRepository;
   late CurrentUserNotifier _currentUserNotifier;
 
   @override
@@ -43,6 +43,7 @@ class AuthViewmodel extends _$AuthViewmodel {
 
   Future<void> login({required String email, required String password}) async {
     try {
+      print("Attempting login with email: $email");
       state = const AsyncValue.loading();
 
       // await the provider directly, no intermediate field
@@ -53,7 +54,7 @@ class AuthViewmodel extends _$AuthViewmodel {
         password: password,
       );
       //success
-
+      print("Login successful, user: ${user.name}, token: ${user.token}");
       localRepo.setToken(user.token);
       _currentUserNotifier.addUser(user);
       state = AsyncValue.data(user);
