@@ -1,5 +1,6 @@
 import 'package:client/core/widgets/custom_field.dart';
 import 'package:client/core/widgets/utils.dart';
+import 'package:client/features/home/view/widgets/audio_wave.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,15 @@ class _UploadSongPageState extends ConsumerState<UploadSongPage> {
     }
   }
 
-  void selectAudio() {}
+  void selectAudio() async {
+    final pickedAudio = await pickAudio();
+
+    if (pickedAudio != null) {
+      setState(() {
+        selectedAudio = pickedAudio;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -101,14 +110,14 @@ class _UploadSongPageState extends ConsumerState<UploadSongPage> {
               ),
 
               const SizedBox(height: 40),
-
-              /// SONG PICKER
-              CustomField(
-                hintText: 'Pick Song',
-                controller: null,
-                readOnly: true,
-                onTap: () {},
-              ),
+              selectedAudio != null
+                  ? AudioWave(audioPath: selectedAudio!.path)
+                  : CustomField(
+                      hintText: 'Pick Song',
+                      controller: null,
+                      readOnly: true,
+                      onTap: selectAudio,
+                    ),
 
               const SizedBox(height: 20),
 
