@@ -44,7 +44,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (context) => const UploadSongPage(),
+            builder: (context) => const HomePage(),
           ), //HomePage()), richelle change back
           (route) => false,
         );

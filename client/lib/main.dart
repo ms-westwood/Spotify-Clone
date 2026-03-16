@@ -37,7 +37,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     return MaterialApp(
       title: 'Spotify',
       theme: AppTheme.darkThemeMode,
-      home: currentUser == null ? const LoginPage() : const UploadSongPage(),
+      home: currentUser == null ? const LoginPage() : const HomePage(),
     );
   }
 }

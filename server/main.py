@@ -1,10 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routes import auth
+from routes import auth, song
 from models.base import Base
 from database import engine
 
+
 app = FastAPI()
+
+
 
 # Enable CORS for all origins while developing
 app.add_middleware(
@@ -17,6 +20,7 @@ app.add_middleware(
 
 # Include your auth routes
 app.include_router(auth.router, prefix="/auth")
+app.include_router(song.router, prefix="/song")
 
 # Create database tables
 Base.metadata.create_all(engine)
