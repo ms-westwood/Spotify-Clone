@@ -6,8 +6,18 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'dart:ui';
 import 'dart:io';
 import 'package:dartz/dartz.dart';
+import '../model/song_model.dart';
 
 part 'home_viewmodel.g.dart';
+
+@riverpod
+Future<List<SongModel>> getAllSongs(Ref ref) async {
+  final res = await ref
+      .watch(homeRepositoryProvider)
+      .getAllSongs(token: ref.read(currentUserProvider)!.token!);
+
+  return res.fold((l) => throw Exception(l.message), (r) => r);
+}
 
 @riverpod
 class HomeViewModel extends _$HomeViewModel {
