@@ -1,4 +1,5 @@
 import 'package:client/core/team/app_pallete.dart';
+import 'package:client/features/home/view/widgets/music_slab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:client/core/providers/current_user_notifier.dart';
@@ -23,7 +24,12 @@ class _HomePageState extends ConsumerState<HomePage> {
     print(user);
 
     return Scaffold(
-      body: pages[selectedIndex],
+      body: Stack(
+        children: [
+          pages[selectedIndex],
+          const Positioned(bottom: 0, child: MusicSlab()),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: selectedIndex,
         onTap: (index) {
