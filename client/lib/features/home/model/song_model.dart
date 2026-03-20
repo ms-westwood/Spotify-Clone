@@ -8,6 +8,7 @@ class SongModel {
   final String thumbnail_url;
   final String song_url;
   final String hex_code;
+  final bool isPlaying;
   SongModel({
     required this.id,
     required this.song_name,
@@ -15,6 +16,7 @@ class SongModel {
     required this.thumbnail_url,
     required this.song_url,
     required this.hex_code,
+    this.isPlaying = false,
   });
 
   SongModel copyWith({
@@ -24,6 +26,7 @@ class SongModel {
     String? thumbnail_url,
     String? song_url,
     String? hex_code,
+    bool? isPlaying,
   }) {
     return SongModel(
       id: id ?? this.id,
@@ -32,6 +35,7 @@ class SongModel {
       thumbnail_url: thumbnail_url ?? this.thumbnail_url,
       song_url: song_url ?? this.song_url,
       hex_code: hex_code ?? this.hex_code,
+      isPlaying: isPlaying ?? this.isPlaying,
     );
   }
 
@@ -43,6 +47,7 @@ class SongModel {
       'thumbnail_url': thumbnail_url,
       'song_url': song_url,
       'hex_code': hex_code,
+      'isPlaying': isPlaying,
     };
   }
 
@@ -54,6 +59,7 @@ class SongModel {
       thumbnail_url: map['thumbnail_url'] ?? '',
       song_url: map['song_url'] ?? '',
       hex_code: map['hex_code'] ?? '',
+      isPlaying: map['isPlaying'] ?? false,
     );
   }
 
@@ -64,7 +70,7 @@ class SongModel {
 
   @override
   String toString() {
-    return 'SongModel(id: $id, song_name: $song_name, artist: $artist, thumbnail_url: $thumbnail_url, song_url: $song_url, hex_code: $hex_code)';
+    return 'SongModel(id: $id, song_name: $song_name, artist: $artist, thumbnail_url: $thumbnail_url, song_url: $song_url, hex_code: $hex_code, isPlaying: $isPlaying)';
   }
 
   @override
@@ -76,7 +82,8 @@ class SongModel {
         other.artist == artist &&
         other.thumbnail_url == thumbnail_url &&
         other.song_url == song_url &&
-        other.hex_code == hex_code;
+        other.hex_code == hex_code &&
+        other.isPlaying == isPlaying;
   }
 
   @override
@@ -86,6 +93,7 @@ class SongModel {
         artist.hashCode ^
         thumbnail_url.hashCode ^
         song_url.hashCode ^
-        hex_code.hashCode;
+        hex_code.hashCode ^
+        isPlaying.hashCode;
   }
 }
