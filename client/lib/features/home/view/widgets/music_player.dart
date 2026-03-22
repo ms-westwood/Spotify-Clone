@@ -123,39 +123,72 @@ class MusicPlayer extends ConsumerWidget {
 
                     // const SizedBox(height: 10), // smaller spacing than before
                     /// Slider
-                    SliderTheme(
-                      data: SliderTheme.of(context).copyWith(
-                        activeTrackColor: Pallete.whiteColor,
-                        inactiveTrackColor: Pallete.whiteColor.withOpacity(0.1),
-                        thumbColor: Pallete.whiteColor,
-                        trackHeight: 4,
-                      ),
-                      child: Slider(value: 0.5, onChanged: (value) {}),
+                    StreamBuilder(
+                      stream: songNotifier.audioPlayer?.positionStream,
+                      builder: (context, asyncSnapshot) {
+                        if (asyncSnapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const SizedBox();
+                        }
+                        final position = asyncSnapshot.data;
+                        final duration = songNotifier.audioPlayer!.duration;
+                        double sliderValue = 0.0;
+                        if (position != null && duration != null) {
+                          sliderValue =
+                              position.inMilliseconds / duration.inMilliseconds;
+                        }
+                        return Column(
+                          children: [
+                            SliderTheme(
+                              data: SliderTheme.of(context).copyWith(
+                                activeTrackColor: Pallete.whiteColor,
+                                inactiveTrackColor: Pallete.whiteColor
+                                    .withOpacity(0.1),
+                                thumbColor: Pallete.whiteColor,
+                                trackHeight: 4,
+                              ),
+                              child: Slider(
+                                value: sliderValue,
+                                min: 0,
+                                max: 1,
+                                onChanged: (value) {
+                                  final duration =
+                                      songNotifier.audioPlayer!.duration;
+
+                                  if (duration != null) {
+                                    final newPosition = duration * value;
+                                    songNotifier.audioPlayer!.seek(newPosition);
+                                  }
+                                },
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  '${position?.inMinutes}:${(position?.inSeconds ?? 0) < 10 ? '0' : ''}${position?.inSeconds.remainder(60)}',
+                                  style: const TextStyle(
+                                    color: Pallete.subtitleText,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                                Text(
+                                  '${duration?.inMinutes}:${(duration?.inSeconds ?? 0) < 10 ? '0' : ''}${duration?.inSeconds.remainder(60)}',
+                                  style: const TextStyle(
+                                    color: Pallete.subtitleText,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
                     ),
 
                     /// Time Row
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text(
-                          '0:00',
-                          style: TextStyle(
-                            color: Pallete.subtitleText,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                        Text(
-                          '0:10',
-                          style: TextStyle(
-                            color: Pallete.subtitleText,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                      ],
-                    ),
-
                     const SizedBox(height: 20), // space before controls
                     /// Controls Row
                     Row(

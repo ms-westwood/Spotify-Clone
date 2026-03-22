@@ -45,4 +45,12 @@ class CurrentSongNotifier extends _$CurrentSongNotifier {
     // ✅ update state (this triggers UI rebuild)
     state = state!.copyWith(isPlaying: !state!.isPlaying);
   }
+
+  void seek(double val) {
+    audioPlayer!.seek(
+      Duration(
+        milliseconds: (audioPlayer!.duration!.inMilliseconds * val).round(),
+      ),
+    );
+  }
 }
