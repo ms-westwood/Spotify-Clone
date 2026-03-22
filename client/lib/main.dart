@@ -7,9 +7,14 @@ import 'features/auth/viewmodel/auth_viewmodel.dart';
 import 'core/providers/current_user_notifier.dart';
 import 'package:client/features/home/view/pages/home_page.dart';
 import 'package:client/features/home/view/pages/upload_song_page.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final dir = await getApplicationDocumentsDirectory();
+  Hive.init(dir.path);
+  await Hive.openBox("songs");
   runApp(const ProviderScope(child: MyApp()));
 }
 

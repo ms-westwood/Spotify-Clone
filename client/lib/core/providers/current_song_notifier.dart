@@ -1,15 +1,18 @@
 import 'package:client/features/home/model/song_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:client/features/home/repositories/home_local_repository.dart';
 
 part 'current_song_notifier.g.dart';
 
 @riverpod
 class CurrentSongNotifier extends _$CurrentSongNotifier {
+  late HomeLocalRepository _homeLocalRepository;
   AudioPlayer? audioPlayer;
 
   @override
   SongModel? build() {
+    _homeLocalRepository = ref.watch(homeLocalRepositoryProvider);
     return null;
   }
 
@@ -28,8 +31,9 @@ class CurrentSongNotifier extends _$CurrentSongNotifier {
         this.state = this.state?.copyWith(isPlaying: false);
       }
     });
-
+    _homeLocalRepository.uploadLocalSong(song);
     // ✅ set isPlaying inside state
+
     state = song.copyWith(isPlaying: true);
   }
 

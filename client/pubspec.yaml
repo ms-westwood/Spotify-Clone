@@ -44,6 +44,11 @@ dependencies:
   audio_waveforms: ^2.0.2
   dartz: ^0.10.1
   just_audio: ^0.10.5
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  path_provider: 2.1.5
+  path_provider_android: ^2.1.6
 
 dev_dependencies:
   flutter_test:
