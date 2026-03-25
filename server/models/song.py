@@ -1,5 +1,6 @@
 from models.base import Base
 from sqlalchemy import Column, TEXT, VARCHAR
+from sqlalchemy.orm import relationship
 
 class Song(Base):
     __tablename__ = "songs"
@@ -11,5 +12,5 @@ class Song(Base):
     song_name = Column(VARCHAR(100))
     hex_code = Column(VARCHAR(6))
 
-
- 
+    # ✅ add this to link back to Favorite
+    favorites = relationship("Favorite", back_populates="song")
