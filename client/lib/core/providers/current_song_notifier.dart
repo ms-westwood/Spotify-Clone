@@ -2,6 +2,7 @@ import 'package:client/features/home/model/song_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:client/features/home/repositories/home_local_repository.dart';
+import 'package:audio_service/audio_service.dart';
 
 part 'current_song_notifier.g.dart';
 
@@ -21,20 +22,31 @@ class CurrentSongNotifier extends _$CurrentSongNotifier {
 
     audioPlayer ??= AudioPlayer();
 
-    final audioSource = AudioSource.uri(Uri.parse(song.song_url));
+    final audioSource = AudioSource.uri(
+      Uri.parse(song.song_url),
+      tag: MediaItem(
+        id: song.id.toString(), // MUST NOT be null
+        title: song.song_name, // MUST NOT be null
+        artist: song.artist ?? 'Unknown Artist',
+        artUri: song.thumbnail_url != null
+            ? Uri.parse(song.thumbnail_url!)
+            : null,
+      ),
+    );
+
     await audioPlayer!.setAudioSource(audioSource);
 
     await audioPlayer!.play();
+
     audioPlayer!.playerStateStream.listen((state) {
       if (state.processingState == ProcessingState.completed) {
         audioPlayer!.seek(Duration.zero);
         audioPlayer!.pause();
-        // ✅ reset isPlaying when song finishes
         this.state = this.state?.copyWith(isPlaying: false);
       }
     });
+
     _homeLocalRepository.uploadLocalSong(song);
-    // ✅ set isPlaying inside state
 
     state = song.copyWith(isPlaying: true);
   }
