@@ -1,3 +1,4 @@
+import 'package:client/core/team/app_pallete.dart';
 import 'package:client/core/widgets/loader.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,19 @@ class LibraryPage extends ConsumerWidget {
         .watch(getAllFavoriteSongsProvider)
         .when(
           data: (data) {
-            return Container();
+            return ListView.builder(
+              itemCount: data.length,
+              itemBuilder: (context, index) {
+                final song = data[index];
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(song.thumbnail_url),
+                    radius: 35,
+                    backgroundColor: Pallete.backgroundColor,
+                  ),
+                );
+              },
+            );
           },
           error: (err, stack) {
             return Center(child: Text(err.toString()));

@@ -1,4 +1,5 @@
 import 'package:client/core/providers/current_song_notifier.dart';
+import 'package:client/core/providers/current_user_notifier.dart';
 import 'package:client/core/team/app_pallete.dart';
 import 'package:client/core/widgets/utils.dart';
 import 'package:client/features/home/view/widgets/music_player.dart';
