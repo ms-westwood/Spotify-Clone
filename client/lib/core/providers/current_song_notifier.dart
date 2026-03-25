@@ -18,15 +18,20 @@ class CurrentSongNotifier extends _$CurrentSongNotifier {
   }
 
   void updateSong(SongModel song) async {
-    await audioPlayer?.stop();
-
-    audioPlayer ??= AudioPlayer();
+    audioPlayer ??= AudioPlayer()
+      ..playerStateStream.listen((state) {
+        if (state.processingState == ProcessingState.completed) {
+          audioPlayer!.seek(Duration.zero);
+          audioPlayer!.pause();
+          this.state = this.state?.copyWith(isPlaying: false);
+        }
+      });
 
     final audioSource = AudioSource.uri(
       Uri.parse(song.song_url),
       tag: MediaItem(
-        id: song.id.toString(), // MUST NOT be null
-        title: song.song_name, // MUST NOT be null
+        id: song.id.toString(),
+        title: song.song_name,
         artist: song.artist ?? 'Unknown Artist',
         artUri: song.thumbnail_url != null
             ? Uri.parse(song.thumbnail_url!)
@@ -34,17 +39,10 @@ class CurrentSongNotifier extends _$CurrentSongNotifier {
       ),
     );
 
+    // ✅ DO NOT call stop()
     await audioPlayer!.setAudioSource(audioSource);
 
     await audioPlayer!.play();
-
-    audioPlayer!.playerStateStream.listen((state) {
-      if (state.processingState == ProcessingState.completed) {
-        audioPlayer!.seek(Duration.zero);
-        audioPlayer!.pause();
-        this.state = this.state?.copyWith(isPlaying: false);
-      }
-    });
 
     _homeLocalRepository.uploadLocalSong(song);
 

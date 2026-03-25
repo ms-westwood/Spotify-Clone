@@ -10,6 +10,7 @@ import 'package:client/features/home/view/pages/upload_song_page.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +19,9 @@ void main() async {
     androidNotificationChannelId: 'com.ryanheise.bgaudio.channel.audio',
     androidNotificationChannelName: 'Audio playback',
     androidNotificationOngoing: true,
+    androidNotificationIcon: 'mipmap/ic_launcher',
   );
+  await Permission.notification.request();
 
   final dir = await getApplicationDocumentsDirectory();
   Hive.init(dir.path);
